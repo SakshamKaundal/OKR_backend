@@ -18,7 +18,7 @@ export class ObjectivesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.objectivesService.findOne(+id);
+    return this.objectivesService.findById(Number.parseInt(id));
   }
 
   // @Patch(':id')
