@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { ObjectivesService } from './objectives.service';
 import { OkrDto } from './dto/create-objective.dto';
+import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
 
 @Controller('objectives')
 export class ObjectivesController {
@@ -21,13 +30,16 @@ export class ObjectivesController {
     return this.objectivesService.findById(Number.parseInt(id));
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateObjectiveDto: UpdateObjectiveDto,
-  // ) {
-  //   return this.objectivesService.update(+id, updateObjectiveDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateObjectiveDto: UpdateObjectiveDto,
+  ) {
+    return this.objectivesService.update(
+      Number.parseInt(id),
+      updateObjectiveDto,
+    );
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

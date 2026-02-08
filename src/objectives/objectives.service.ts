@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OkrDto } from './dto/create-objective.dto';
 import { PrismaService } from '../prisma.service';
+import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
 
 @Injectable()
 export class ObjectivesService {
@@ -27,6 +28,9 @@ export class ObjectivesService {
       include: {
         keyResults: true,
       },
+      orderBy: {
+        id: 'asc',
+      },
     });
   }
 
@@ -42,9 +46,20 @@ export class ObjectivesService {
     return objective;
   }
 
-  // update(id: number, updateObjectiveDto: UpdateObjectiveDto) {
-  //   return `This action updates a #${id} objective`;
-  // }
+  async update(id: number, dto: UpdateObjectiveDto) {
+    console.log(dto);
+
+    // Update objective title only (leave key results alone)
+    return this.prismaService.objective.update({
+      where: { id },
+      data: {
+        title: dto.title,
+      },
+      include: {
+        keyResults: true,
+      },
+    });
+  }
 
   async remove(id: number) {
     await this.prismaService.objective.delete({
