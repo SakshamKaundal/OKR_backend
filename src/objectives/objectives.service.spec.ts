@@ -109,4 +109,48 @@ describe('ObjectivesService', () => {
       );
     });
   });
+
+  describe('isObjectiveCompleted', () => {
+    it('should throw NotFoundException when objective is missing', async () => {
+      mockPrismaService.objective.findFirst.mockResolvedValue(null);
+
+      await expect(objectivesService.isObjectiveCompleted(1)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it.each([
+      {
+        name: 'returns false when no key results',
+        keyResults: [],
+        expected: false,
+      },
+      {
+        name: 'returns true when all key results are complete',
+        keyResults: [
+          { description: 'kr-1', progress: 100 },
+          { description: 'kr-2', progress: 120 },
+        ],
+        expected: true,
+      },
+      {
+        name: 'returns false when any key result is incomplete',
+        keyResults: [
+          { description: 'kr-1', progress: 100 },
+          { description: 'kr-2', progress: 80 },
+        ],
+        expected: false,
+      },
+    ])('$name', async ({ keyResults, expected }) => {
+      mockPrismaService.objective.findFirst.mockResolvedValue({
+        id: 1,
+        title: 'sample objective',
+        keyResults,
+      });
+
+      await expect(objectivesService.isObjectiveCompleted(1)).resolves.toBe(
+        expected,
+      );
+    });
+  });
 });

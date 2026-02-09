@@ -1,9 +1,8 @@
-export class OkrDto {
+export class UpdateOkrDto {
   title: string;
-  keyResult: KeyResultDTO[];
 }
 
-class KeyResultDTO {
+export class KeyResultDTO {
   description: string;
   progress: number;
 }

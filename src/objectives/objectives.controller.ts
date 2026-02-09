@@ -8,7 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ObjectivesService } from './objectives.service';
-import { OkrDto } from './dto/create-objective.dto';
+import { UpdateOkrDto } from './dto/create-objective.dto';
 import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
 
 @Controller('objectives')
@@ -16,7 +16,7 @@ export class ObjectivesController {
   constructor(private readonly objectivesService: ObjectivesService) {}
 
   @Post()
-  create(@Body() createObjectiveDto: OkrDto) {
+  create(@Body() createObjectiveDto: UpdateOkrDto) {
     return this.objectivesService.create(createObjectiveDto);
   }
 
@@ -44,5 +44,10 @@ export class ObjectivesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.objectivesService.remove(+id);
+  }
+
+  @Get(':id/completed')
+  isCompleted(@Param('id') id: string) {
+    return this.objectivesService.isObjectiveCompleted(Number.parseInt(id));
   }
 }

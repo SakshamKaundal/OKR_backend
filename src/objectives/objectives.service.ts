@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { OkrDto } from './dto/create-objective.dto';
+import { UpdateOkrDto } from './dto/create-objective.dto';
 import { PrismaService } from '../prisma.service';
 import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
 
@@ -7,18 +7,10 @@ import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
 export class ObjectivesService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createObjectiveDto: OkrDto) {
+  create(createObjectiveDto: UpdateOkrDto) {
     return this.prismaService.objective.create({
       data: {
         title: createObjectiveDto.title,
-        keyResults: {
-          createMany: {
-            data: createObjectiveDto.keyResult.map((kr) => ({
-              description: kr.description,
-              progress: kr.progress,
-            })),
-          },
-        },
       },
     });
   }
@@ -65,5 +57,22 @@ export class ObjectivesService {
     await this.prismaService.objective.delete({
       where: { id },
     });
+  }
+
+  async isObjectiveCompleted(id: number) {
+    const objective = await this.prismaService.objective.findFirst({
+      where: { id },
+      include: { keyResults: true },
+    });
+
+    if (!objective) {
+      throw new NotFoundException(`Objective with id ${id} not found`);
+    }
+
+    if (objective.keyResults.length === 0) {
+      return false;
+    }
+
+    return objective.keyResults.every((keyResult) => keyResult.progress >= 100);
   }
 }
