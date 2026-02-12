@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateKeyResultDto {
   @IsString()
@@ -7,6 +7,13 @@ export class CreateKeyResultDto {
 
   @IsInt()
   @Min(0)
-  @Max(100)
   progress: number;
+
+  @IsInt()
+  @Min(0)
+  target: number;
+
+  @IsString()
+  @IsNotEmpty()
+  metric: string;
 }

@@ -24,6 +24,8 @@ model KeyResult {
   description String?
   isCompleted Boolean @default(false)
   progress    Int
+  target      Int     @default(100)
+  metric      String? @default("%")
 
   objectiveId Int
   objective   Objective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)

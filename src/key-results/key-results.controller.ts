@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { KeyResultsService } from './key-results.service';
 import { CreateKeyResultDto } from './dto/create-key-result.dto';
-import { UpdateKeyResultDto } from './dto/update-key-result.dto';
 
 @Controller('objectives/:id/key-results')
 export class KeyResultsController {
@@ -36,13 +27,16 @@ export class KeyResultsController {
     return this.keyResultsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateKeyResultDto: UpdateKeyResultDto,
-  ) {
-    return this.keyResultsService.update(+id, updateKeyResultDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateKeyResultDto: UpdateKeyResultDto,
+  // ) {
+  //   return this.keyResultsService.update(
+  //     Number.parseInt(id),
+  //     updateKeyResultDto,
+  //   );
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

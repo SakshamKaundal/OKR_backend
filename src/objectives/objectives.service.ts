@@ -73,6 +73,12 @@ export class ObjectivesService {
       return false;
     }
 
-    return objective.keyResults.every((keyResult) => keyResult.progress >= 100);
+    return objective.keyResults.every((keyResult) => {
+      const target = keyResult.target ?? 100;
+      if (target <= 0) {
+        return false;
+      }
+      return keyResult.progress >= target;
+    });
   }
 }
