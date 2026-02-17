@@ -25,19 +25,19 @@ export class KeyResultsService {
     return keyResult;
   }
 
-  findAll() {
-    return `This action returns all keyResults`;
-  }
+  async remove(objectiveId: number, keyResultsId: number) {
+    const keyResult = await this.prismaService.keyResult.findUnique({
+      where: { id: keyResultsId },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} keyResult`;
-  }
+    if (!keyResult) {
+      throw new NotFoundException(
+        `Key Result with ID ${keyResultsId} not found`,
+      );
+    }
 
-  // update(id: number, updateKeyResultDto: UpdateKeyResultDto) {
-  //   return `This action updates a #${id} keyResult`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} keyResult`;
+    await this.prismaService.keyResult.delete({
+      where: { id: keyResultsId },
+    });
   }
 }
