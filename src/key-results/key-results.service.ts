@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateKeyResultDto } from './dto/create-key-result.dto';
+import { UpdateKeyResultDto } from './dto/update-key-result.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -25,19 +26,61 @@ export class KeyResultsService {
     return keyResult;
   }
 
-  async remove(objectiveId: number, keyResultsId: number) {
+  async update(
+    objectiveId: number,
+    keyResultId: number,
+    updateKeyResultDto: UpdateKeyResultDto,
+  ) {
     const keyResult = await this.prismaService.keyResult.findUnique({
-      where: { id: keyResultsId },
+      where: { id: keyResultId },
     });
 
     if (!keyResult) {
       throw new NotFoundException(
-        `Key Result with ID ${keyResultsId} not found`,
+        `Key Result with ID ${keyResultId} not found`,
+      );
+    }
+
+    if (keyResult.objectiveId !== objectiveId) {
+      throw new NotFoundException(
+        `Key Result does not belong to this objective`,
+      );
+    }
+
+    const progress = updateKeyResultDto.progress ?? keyResult.progress;
+    const target = updateKeyResultDto.target ?? keyResult.target;
+    const isCompleted = progress >= target;
+
+    return await this.prismaService.keyResult.update({
+      where: { id: keyResultId },
+      data: {
+        ...updateKeyResultDto,
+        isCompleted,
+      },
+    });
+  }
+
+  async remove(objectiveId: number, keyResultId: number) {
+    const keyResult = await this.prismaService.keyResult.findUnique({
+      where: { id: keyResultId },
+    });
+
+    if (!keyResult) {
+      throw new NotFoundException(
+        `Key Result with ID ${keyResultId} not found`,
+      );
+    }
+
+    if (keyResult.objectiveId !== objectiveId) {
+      throw new NotFoundException(
+        `Key Result does not belong to this objective`,
       );
     }
 
     await this.prismaService.keyResult.delete({
-      where: { id: keyResultsId },
+      where: { id: keyResultId },
     });
+
+    return { success: true };
   }
 }

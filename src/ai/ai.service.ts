@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 
 export interface GeneratedOKR {
   objective: string;
@@ -29,7 +28,26 @@ const okrSchema = z.object({
   ),
 });
 
-const responseSchema = zodToJsonSchema(okrSchema);
+const responseSchema = {
+  type: 'object',
+  properties: {
+    objective: { type: 'string' },
+    keyResults: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          description: { type: 'string' },
+          progress: { type: 'number' },
+          target: { type: 'number' },
+          metric: { type: 'string' },
+        },
+        required: ['description', 'progress', 'target', 'metric'],
+      },
+    },
+  },
+  required: ['objective', 'keyResults'],
+};
 
 @Injectable()
 export class AiService {
@@ -46,7 +64,7 @@ export class AiService {
   }
 
   async generateOKRs(prompt: string): Promise<GeneratedOKR> {
-    const systemPrompt = `You are an OKR generator for my app    
+    const systemPrompt = `You are an OKR generator for my app
 
     Rules:
     - keep the goal strict as user have requested
@@ -120,9 +138,10 @@ export class AiService {
             },
           ],
           generationConfig: {
-            temperature: 0.2,
+            temperature: 0.4,
             maxOutputTokens: 2048,
             topP: 0.8,
+            responseMimeType: 'application/json',
             responseSchema: responseSchema,
           },
         }),

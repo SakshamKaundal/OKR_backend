@@ -1,3 +1,8 @@
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
 export class UpdateObjectiveDto {
-  title: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  title?: string;
 }

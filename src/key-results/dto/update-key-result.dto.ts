@@ -1,17 +1,23 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateKeyResultDto } from './create-key-result.dto';
-import { IsInt, Min, IsString, IsNotEmpty } from 'class-validator';
+import { IsInt, Min, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class UpdateKeyResultDto extends PartialType(CreateKeyResultDto) {
-  @IsInt()
-  @Min(0)
-  target: number;
-
+export class UpdateKeyResultDto {
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  metric: string;
+  description?: string;
 
+  @IsOptional()
   @IsInt()
   @Min(0)
-  progress: number;
+  progress?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  target?: number;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  metric?: string;
 }
