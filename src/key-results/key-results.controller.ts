@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Delete, Patch, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { KeyResultsService } from './key-results.service';
 import { CreateKeyResultDto } from './dto/create-key-result.dto';
 import { UpdateKeyResultDto } from './dto/update-key-result.dto';
@@ -31,25 +31,22 @@ export class KeyResultsController {
         updateKeyResultDto,
       );
     } catch (error) {
-      throw new HttpException(
-        error.message || 'Failed to update key result',
-        HttpStatus.BAD_REQUEST,
-      );
+      console.log(error);
     }
   }
 
   @Delete(':keyResultId')
-  async remove(@Param('id') id: string, @Param('keyResultId') keyResultId: string) {
+  async remove(
+    @Param('id') id: string,
+    @Param('keyResultId') keyResultId: string,
+  ) {
     try {
       return await this.keyResultsService.remove(
         Number.parseInt(id),
         Number.parseInt(keyResultId),
       );
     } catch (error) {
-      throw new HttpException(
-        error.message || 'Failed to delete key result',
-        HttpStatus.BAD_REQUEST,
-      );
+      console.log(error);
     }
   }
 }
