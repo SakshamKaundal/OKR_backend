@@ -8,15 +8,15 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ObjectivesService } from './objectives.service';
-import { UpdateOkrDto } from './dto/create-objective.dto';
-import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
+import { CreateObjectiveDto } from './dto/create-objective.dto';
+import { UpdateObjectiveDto } from './dto/update-objective.dto';
 
 @Controller('objectives')
 export class ObjectivesController {
   constructor(private readonly objectivesService: ObjectivesService) {}
 
   @Post()
-  create(@Body() createObjectiveDto: UpdateOkrDto) {
+  create(@Body() createObjectiveDto: CreateObjectiveDto) {
     return this.objectivesService.create(createObjectiveDto);
   }
 

@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateOkrDto } from './dto/create-objective.dto';
+import { CreateObjectiveDto } from './dto/create-objective.dto';
 import { PrismaService } from '../prisma.service';
-import { UpdateObjectiveDto } from './dto/UpdateObjectiveDto';
+import { UpdateObjectiveDto } from './dto/update-objective.dto';
 
 @Injectable()
 export class ObjectivesService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createObjectiveDto: UpdateOkrDto) {
+  create(createObjectiveDto: CreateObjectiveDto) {
     return this.prismaService.objective.create({
       data: {
         title: createObjectiveDto.title,
