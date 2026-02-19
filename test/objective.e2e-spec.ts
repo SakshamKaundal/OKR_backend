@@ -3,7 +3,6 @@ import { DatabaseManager } from './support/manager';
 import { TestApp } from './support/app';
 import request from 'supertest';
 
-// Setup test environment before all tests
 setupTestEnvironment();
 
 interface ObjectiveResponse {
