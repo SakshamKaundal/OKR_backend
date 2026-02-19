@@ -1,53 +1,34 @@
-# OKR Management System
+# OKR Backend API
 
-A backend API service for managing **Objectives and Key Results (OKRs)**, built using modern TypeScript tooling with **NestJS**, **Prisma ORM**, and containerized infrastructure using **Podman** and **PostgreSQL**.
+NestJS-based backend API for the Incubyte OKR application.
 
-This service provides REST APIs to manage objectives and associated key results.
+## Overview
 
-Repository: [https://github.com/SakshamKaundal/OKR_backend](https://github.com/SakshamKaundal/OKR_backend) 
+This backend provides REST APIs for:
 
----
+- Objectives CRUD
+- Key Results CRUD
+- AI-generated OKRs using Google Gemini
+
+It uses Prisma ORM with PostgreSQL, and runs the database via Podman.
 
 ## Tech Stack
 
-* **[Node.js](https://nodejs.org/)**
-* **[TypeScript](https://www.typescriptlang.org/)**
-* **[NestJS](https://nestjs.com/)**
-* **[Prisma ORM](https://www.prisma.io/)**
-* **[PostgreSQL](https://www.postgresql.org/)**
-* **[Podman](https://podman.io/)**
-* **[pnpm](https://pnpm.io/)**
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Containerization**: Podman
+- **Package Manager**: pnpm
+- **AI**: Google Gemini API
 
----
+## Setup Instructions
 
-## Prerequisites
-
-Before getting started, install the following:
-
-### Required Tools
-
-* **Node.js** — Install the LTS version (v20 or above recommended)
-* **pnpm** — Fast package manager:
+### 1. Navigate to Backend Directory
 
 ```bash
-npm install -g pnpm
-```
-
-* **Podman** — Container engine used in place of Docker
-* **PostgreSQL** — Database server (optional if using Podman containerized DB)
-
----
-
-## Project Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/SakshamKaundal/OKR_backend.git
 cd OKR_backend
 ```
-
----
 
 ### 2. Install Dependencies
 
@@ -55,41 +36,41 @@ cd OKR_backend
 pnpm install
 ```
 
----
+### 3. Start the Database
 
-### 3. Configure Environment Variables
-
-Create a `.env` file in the root:
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and configure your database:
-
-```
-DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<database>
-```
-
-Replace placeholders with your PostgreSQL credentials.
-
----
-
-### 4. Database & Containers
-
-Start the Podman virtual machine:
+Start Podman machine:
 
 ```bash
 podman machine start
 ```
 
-Bring up containerized services:
+Start PostgreSQL container:
 
 ```bash
 podman compose up -d
 ```
 
-Run database migrations:
+PostgreSQL will run on `localhost:5433` (container `5432`).
+
+### 4. Configure Environment Variables
+
+Create local environment file:
+
+```bash
+cp .env.example .env
+```
+
+Ensure these values are set in `.env`:
+
+```env
+DATABASE_URL="postgresql://username:password@localhost:5433/okrs"
+PORT=3000
+GOOGLE_API_KEY="your_google_api_key_here"
+```
+
+### 5. Setup Database Schema
+
+Run migrations:
 
 ```bash
 pnpm prisma migrate deploy
@@ -101,58 +82,32 @@ Generate Prisma client:
 pnpm prisma generate
 ```
 
----
-
-### 5. Run the Development Server
+### 6. Start Development Server
 
 ```bash
 pnpm start:dev
 ```
 
-The server should start and listen on the default NestJS port **3000** unless configured otherwise in `.env`.
+Backend starts at **`http://localhost:3000`**.
 
----
+## Available Commands
 
-## Available Scripts
+- `pnpm start:dev` - Start backend in watch mode
+- `pnpm build` - Build production bundle
+- `pnpm test` - Unit tests
+- `pnpm test:e2e` - End-to-end tests
+- `pnpm test:cov` - Coverage report
+- `pnpm prisma migrate deploy` - Apply migrations
+- `pnpm prisma generate` - Generate Prisma client
 
-| Script                       | Description               |
-| ---------------------------- | ------------------------- |
-| `pnpm start:dev`             | Start in development mode |
-| `pnpm prisma migrate deploy` | Run Prisma migrations     |
-| `pnpm prisma generate`       | Generate Prisma client    |
+## API Notes
 
----
+- CORS is enabled.
+- Validation is enabled globally (`ValidationPipe` with transform + whitelist).
+- AI endpoint: `POST /ai/generate-okr`
 
-## Testing
+## Frontend Integration
 
-If tests are implemented, the usual NestJS test commands are:
+Run the frontend after backend setup:
 
-```bash
-pnpm test
-pnpm test:e2e
-pnpm test:cov
-```
-
----
-
-## Project Overview
-
-The repository includes:
-
-```
-src/              → Application source
-prisma/           → Prisma schema & migrations
-test/             → Test files (if any)
-docker-compose.yml → Container definitions
-```
-
-All business logic, controllers, and modules follow the NestJS modular architecture. ([GitHub][1])
-
----
-
-## Notes
-
-* Make sure the Podman machine is running before setting up containers.
-* You can use any database client to inspect the PostgreSQL database.
-* Ensure the `DATABASE_URL` is correct in your `.env` file.
-
+[Frontend Documentation](https://github.com/SakshamKaundal/Incubyte_okr/blob/main/README.md)
