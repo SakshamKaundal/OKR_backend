@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class UpdateOkrDto {
+export class CreateObjectiveDto {
   @IsString()
   @IsNotEmpty()
   title: string;

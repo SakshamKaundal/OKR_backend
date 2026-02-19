@@ -3,7 +3,7 @@ export class OkrDto {
   keyResultsDto: string;
 }
 
-export class keyResultDTO {
+export class KeyResultDto {
   description: string;
   progress: number;
 }
