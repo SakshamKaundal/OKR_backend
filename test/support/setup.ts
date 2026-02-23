@@ -16,7 +16,4 @@ export const setupTestEnvironment = (): void => {
 
   // Set test-specific environment variables
   process.env.NODE_ENV = 'test';
-
-  // Increase timeout for container operations
-  jest.setTimeout(60000);
 };

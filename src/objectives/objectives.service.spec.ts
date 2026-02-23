@@ -8,9 +8,9 @@ describe('ObjectivesService', () => {
 
   const mockPrismaService = {
     objective: {
-      create: jest.fn(),
-      findMany: jest.fn(),
-      findFirst: jest.fn(),
+      create: vi.fn(),
+      findMany: vi.fn(),
+      findFirst: vi.fn(),
     },
   };
 
